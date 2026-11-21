@@ -3,6 +3,7 @@ name: Deploy Production to Azure VM
 on:
   push:
     branches: [ production ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -43,22 +44,36 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.IMAGE_REPO }}/client:latest
 
-      - name: Deploy to Azure VM via SSH
-        if: ${{ secrets.AZURE_VM_HOST != '' && secrets.AZURE_SSH_KEY != '' }}
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.AZURE_VM_HOST }}
-          username: ${{ secrets.AZURE_VM_USER || 'azureuser' }}
-          key: ${{ secrets.AZURE_SSH_KEY }}
-          script: |
+      - name: Deploy to Azure VM
+        env:
+          AZURE_HOST: ${{ secrets.AZURE_VM_HOST }}
+          AZURE_USER: ${{ secrets.AZURE_VM_USER }}
+          AZURE_KEY: ${{ secrets.AZURE_SSH_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -z "$AZURE_HOST" ] || [ -z "$AZURE_KEY" ]; then
+            echo "======================================================================"
+            echo "ℹ️  NOTICE: Azure VM host or SSH key is not yet configured."
+            echo "   Skipping remote SSH deployment until Azure VM credentials are provided."
+            echo "   Docker images successfully built and pushed to GitHub Container Registry:"
+            echo "   - ghcr.io/${{ env.IMAGE_REPO }}/server:latest"
+            echo "   - ghcr.io/${{ env.IMAGE_REPO }}/client:latest"
+            echo "======================================================================"
+            exit 0
+          fi
+
+          echo "🚀 Deploying containers to Azure VM at $AZURE_HOST..."
+          mkdir -p ~/.ssh
+          echo "$AZURE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          TARGET_USER="${AZURE_USER:-azureuser}"
+
+          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=15 -i ~/.ssh/id_rsa "$TARGET_USER@$AZURE_HOST" "
+            set -e
             cd /opt/juas-adventure-fest-3.0
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo '$GH_TOKEN' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
             docker system prune -af --volumes
-
-      - name: Azure Secrets Notification
-        if: ${{ secrets.AZURE_VM_HOST == '' || secrets.AZURE_SSH_KEY == '' }}
-        run: |
-          echo "Notice: Azure VM secrets (AZURE_VM_HOST, AZURE_SSH_KEY) are not yet configured in GitHub Secrets."
-          echo "Docker images have been successfully built and pushed to GHCR (ghcr.io/${{ env.IMAGE_REPO }})."
+          "
+          echo "✅ Production deployment to Azure VM completed successfully!"
