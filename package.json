@@ -1,0 +1,30 @@
+{
+  "name": "juas-adventure-fest-3.0",
+  "version": "3.0.0",
+  "description": "JUAS Adventure Fest 3.0 — Gamified Event & Registration Platform for Jahangirnagar University Adventure Society",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"cyan,magenta\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "seed": "cd server && npm run seed",
+    "start": "cd server && npm start",
+    "cluster": "cd server && npm run cluster",
+    "test": "cd server && npm test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "juas",
+    "adventure-fest",
+    "gamified-event",
+    "threejs",
+    "gta-vi-hud",
+    "jahangirnagar-university"
+  ],
+  "author": "Jahangirnagar University Adventure Society",
+  "license": "MIT"
+}

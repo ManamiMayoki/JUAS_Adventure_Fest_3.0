@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+/* Custom Tactical Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0F19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A3655;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00E5FF;
+}
+
+/* Retro Sunset Neon Glow Gradients */
+.text-neon-sunset {
+  background: linear-gradient(135deg, #FF9E00 0%, #FF2A85 50%, #00E5FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-cyber-teal {
+  color: #00E5FF;
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+}
+
+.text-fox-amber {
+  color: #FF9E00;
+  text-shadow: 0 0 12px rgba(255, 158, 0, 0.5);
+}
+
+.text-sunset-magenta {
+  color: #FF2A85;
+  text-shadow: 0 0 12px rgba(255, 42, 133, 0.5);
+}
+
+/* Tactical HUD Glass Panel */
+.hud-panel {
+  background: rgba(18, 24, 41, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(42, 54, 85, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.hud-panel-glow {
+  background: rgba(18, 24, 41, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+}
+
+/* CRT / Tactical Scanline Overlay */
+.hud-scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Star Level Glowing Pulse */
+@keyframes starPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px #FF9E00);
+  }
+  50% {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 10px #FF2A85);
+  }
+}
+
+.star-active {
+  animation: starPulse 2s ease-in-out infinite;
+}

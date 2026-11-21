@@ -1,0 +1,54 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches: [ development, release, production ]
+  push:
+    branches: [ development, release ]
+
+jobs:
+  test-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: server/package.json
+
+      - name: Install Server Packages
+        run: |
+          cd server
+          npm ci
+
+      - name: Run Tests
+        run: |
+          cd server
+          npm test
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: client/package.json
+
+      - name: Install Client Packages
+        run: |
+          cd client
+          npm ci
+
+      - name: Build Production Bundle
+        run: |
+          cd client
+          npm run build
