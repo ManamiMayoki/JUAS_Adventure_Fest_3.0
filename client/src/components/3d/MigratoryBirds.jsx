@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Single Migratory Bird with flapping wings
-const Bird = ({ offset = 0, speed = 1, baseAltitude = 4.5, radius = 7 }) => {
+// Single Migratory Bird with visible luminous wings
+const Bird = ({ offset = 0, speed = 1, baseAltitude = 4.6, radius = 7.5 }) => {
   const birdRef = useRef();
   const leftWingRef = useRef();
   const rightWingRef = useRef();
@@ -26,7 +26,7 @@ const Bird = ({ offset = 0, speed = 1, baseAltitude = 4.5, radius = 7 }) => {
     }
 
     // Wing flapping
-    const flap = Math.sin(clock.getElapsedTime() * 7 + offset * 2) * 0.6;
+    const flap = Math.sin(clock.getElapsedTime() * 7 + offset * 2) * 0.65;
     if (leftWingRef.current && rightWingRef.current) {
       leftWingRef.current.rotation.z = flap;
       rightWingRef.current.rotation.z = -flap;
@@ -35,28 +35,38 @@ const Bird = ({ offset = 0, speed = 1, baseAltitude = 4.5, radius = 7 }) => {
 
   return (
     <group ref={birdRef}>
-      {/* Bird Fuselage / Body */}
+      {/* Bird Body - Crisp Clean White */}
       <mesh>
-        <coneGeometry args={[0.15, 0.8, 5]} />
-        <meshStandardMaterial color="#E2E8F0" roughness={0.3} />
+        <coneGeometry args={[0.16, 0.85, 5]} />
+        <meshStandardMaterial color="#FFFFFF" roughness={0.2} />
       </mesh>
       {/* Beak */}
-      <mesh position={[0, 0.48, 0]}>
-        <coneGeometry args={[0.06, 0.25, 4]} />
+      <mesh position={[0, 0.5, 0]}>
+        <coneGeometry args={[0.07, 0.28, 4]} />
         <meshStandardMaterial color="#FF9E00" />
       </mesh>
-      {/* Left Wing */}
+      {/* Left Wing - Luminous Migratory Teal */}
       <group ref={leftWingRef} position={[-0.1, 0.1, 0]}>
-        <mesh position={[-0.45, 0, 0]} rotation={[0, 0, -0.1]}>
-          <boxGeometry args={[0.8, 0.03, 0.3]} />
-          <meshStandardMaterial color="#00E5FF" roughness={0.4} />
+        <mesh position={[-0.5, 0, 0]} rotation={[0, 0, -0.1]}>
+          <boxGeometry args={[0.9, 0.035, 0.35]} />
+          <meshStandardMaterial
+            color="#00E5FF"
+            emissive="#00B4D8"
+            emissiveIntensity={0.3}
+            roughness={0.2}
+          />
         </mesh>
       </group>
-      {/* Right Wing */}
+      {/* Right Wing - Luminous Migratory Teal */}
       <group ref={rightWingRef} position={[0.1, 0.1, 0]}>
-        <mesh position={[0.45, 0, 0]} rotation={[0, 0, 0.1]}>
-          <boxGeometry args={[0.8, 0.03, 0.3]} />
-          <meshStandardMaterial color="#00E5FF" roughness={0.4} />
+        <mesh position={[0.5, 0, 0]} rotation={[0, 0, 0.1]}>
+          <boxGeometry args={[0.9, 0.035, 0.35]} />
+          <meshStandardMaterial
+            color="#00E5FF"
+            emissive="#00B4D8"
+            emissiveIntensity={0.3}
+            roughness={0.2}
+          />
         </mesh>
       </group>
     </group>
