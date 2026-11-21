@@ -4,16 +4,16 @@ import { WildernessCanvas } from '../3d/WildernessCanvas';
 import { useAudio } from '../../context/AudioContext';
 
 export const HeroBanner = () => {
-  const { playClick, playBirdChirp } = useAudio();
+  const { playClick, playHover, playBirdChirp, playLevelUp } = useAudio();
 
   return (
     <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden pt-4 pb-16">
-      {/* 3D Scene Background Canvas - Balanced Opacity */}
+      {/* 3D Scene Background Canvas */}
       <div className="absolute inset-0 z-0 opacity-90 pointer-events-auto">
         <WildernessCanvas />
       </div>
 
-      {/* Atmospheric Vignette Gradients for cinematic contrast */}
+      {/* Atmospheric Vignette Gradients */}
       <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#0B0F19] via-transparent to-[#0B0F19]/45 pointer-events-none" />
       <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0B0F19]/40 via-transparent to-[#0B0F19]/40 pointer-events-none" />
 
@@ -44,22 +44,25 @@ export const HeroBanner = () => {
 
         {/* CTA Actions */}
         <div className="mt-7 flex flex-wrap items-center justify-center gap-4">
+          {/* JOIN THE QUEST: No gradient, game-like solid button with arcade hover and sound */}
           <a
             href="#register"
+            onMouseEnter={playHover}
             onClick={() => {
-              playClick();
+              playLevelUp();
               playBirdChirp();
             }}
-            className="flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-display font-black text-sm sm:text-base text-[#0B0F19] bg-gradient-to-r from-[#00E5FF] via-[#FF9E00] to-[#FF2A85] shadow-[0_0_25px_rgba(0,229,255,0.4)] hover:shadow-[0_0_35px_rgba(255,158,0,0.6)] transform hover:-translate-y-1 transition-all group"
+            className="flex items-center gap-3 px-8 py-3.5 rounded-xl font-display font-black text-sm sm:text-base text-[#0B0F19] bg-[#00E5FF] border-2 border-[#00E5FF] hover:bg-white hover:text-[#0B0F19] hover:border-white hover:shadow-[0_0_35px_rgba(0,229,255,0.85)] hover:scale-105 active:scale-95 active:translate-y-0.5 transition-all duration-150 uppercase tracking-wider group cursor-pointer"
           >
             <span>JOIN THE QUEST</span>
-            <ArrowRight className="w-5 h-5 text-[#0B0F19] group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 text-[#0B0F19] group-hover:translate-x-1.5 transition-transform" />
           </a>
 
           <a
             href="#segments"
+            onMouseEnter={playHover}
             onClick={playClick}
-            className="flex items-center gap-2 px-6 py-3.5 rounded-xl font-mono text-xs sm:text-sm font-semibold text-white bg-[#0B0F19]/85 border border-[#2A3655] hover:border-[#00E5FF] hover:text-[#00E5FF] backdrop-blur-md shadow-lg transition-all"
+            className="flex items-center gap-2 px-6 py-3.5 rounded-xl font-mono text-xs sm:text-sm font-semibold text-white bg-[#0B0F19]/85 border border-[#2A3655] hover:border-[#00E5FF] hover:text-[#00E5FF] hover:bg-[#121829] hover:scale-105 active:scale-95 backdrop-blur-md shadow-lg transition-all"
           >
             <Compass className="w-4 h-4 text-[#00E5FF]" />
             <span>EXPLORE 6 QUEST SEGMENTS</span>

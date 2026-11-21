@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/layout/Navbar';
 import { HeroBanner } from './components/hero/HeroBanner';
-import { LiveStatusTicker } from './components/hud/LiveStatusTicker';
+import { CampusMascots } from './components/hero/CampusMascots';
 import { MissionBriefings } from './components/missions/MissionBriefings';
 import { RulebookModal } from './components/missions/RulebookModal';
 import { RegistrationWizard } from './components/registration/RegistrationWizard';
@@ -38,13 +38,13 @@ export function App() {
         onOpenLookupModal={() => setIsLookupModalOpen(true)}
       />
 
-      {/* Live Server Telemetry Ticker */}
-      <LiveStatusTicker />
-
       {/* Main Content Sections */}
       <main className="flex-1">
         {/* 3D Wilderness Hero Section */}
         <HeroBanner />
+
+        {/* Dual Campus Mascots: Golden Fox & Migratory Bird */}
+        <CampusMascots />
 
         {/* Mission Briefing Cards (Segment Explorer) */}
         <MissionBriefings

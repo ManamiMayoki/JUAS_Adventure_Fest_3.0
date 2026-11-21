@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
+import React, { createContext, useContext, useState, useRef } from 'react';
 
 const AudioContext = createContext(null);
 
@@ -43,7 +43,30 @@ export const AudioProvider = ({ children }) => {
     } catch (e) {}
   };
 
-  // 2. Migratory Bird Chirp Sound Effect
+  // 2. High-Tech Game UI Hover Tone
+  const playHover = () => {
+    if (isMuted) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(820, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1150, ctx.currentTime + 0.04);
+
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.04);
+    } catch (e) {}
+  };
+
+  // 3. Migratory Bird Chirp Sound Effect
   const playBirdChirp = () => {
     if (isMuted) return;
     try {
@@ -67,7 +90,7 @@ export const AudioProvider = ({ children }) => {
     } catch (e) {}
   };
 
-  // 3. Radar Sonar Ping
+  // 4. Radar Sonar Ping
   const playRadarPing = () => {
     if (isMuted) return;
     try {
@@ -90,13 +113,13 @@ export const AudioProvider = ({ children }) => {
     } catch (e) {}
   };
 
-  // 4. Quest Star Level-Up Chord
+  // 5. Quest Star Level-Up Chord
   const playLevelUp = () => {
     if (isMuted) return;
     try {
       const ctx = getAudioContext();
       if (!ctx) return;
-      const notes = [440, 554.37, 659.25, 880]; // A Major arpeggio
+      const notes = [440, 554.37, 659.25, 880];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -124,6 +147,7 @@ export const AudioProvider = ({ children }) => {
         isMuted,
         toggleMute,
         playClick,
+        playHover,
         playBirdChirp,
         playRadarPing,
         playLevelUp,
