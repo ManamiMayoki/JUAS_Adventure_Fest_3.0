@@ -248,4 +248,4 @@ Every push to `production` triggers `.github/workflows/deploy-production.yml` fo
 ---
 
 ## 🛡️ License
-Released under the **MIT License**. Created with passion for **Jahangirnagar University Adventure Society** & **JU Science Club**.
+Released under the **MIT License**. Created with passion for **Jahangirnagar University Adventure Society** & **JU Science Club**. Marufa
