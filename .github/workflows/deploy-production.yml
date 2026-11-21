@@ -4,12 +4,20 @@ on:
   push:
     branches: [ production ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Set lower case repository name
+        run: |
+          echo "IMAGE_REPO=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -26,20 +34,21 @@ jobs:
         with:
           context: ./server
           push: true
-          tags: ghcr.io/${{ github.repository }}/server:latest
+          tags: ghcr.io/${{ env.IMAGE_REPO }}/server:latest
 
       - name: Build and Push Client Image
         uses: docker/build-push-action@v5
         with:
           context: ./client
           push: true
-          tags: ghcr.io/${{ github.repository }}/client:latest
+          tags: ghcr.io/${{ env.IMAGE_REPO }}/client:latest
 
       - name: Deploy to Azure VM via SSH
+        if: ${{ secrets.AZURE_VM_HOST != '' && secrets.AZURE_SSH_KEY != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.AZURE_VM_HOST }}
-          username: ${{ secrets.AZURE_VM_USER }}
+          username: ${{ secrets.AZURE_VM_USER || 'azureuser' }}
           key: ${{ secrets.AZURE_SSH_KEY }}
           script: |
             cd /opt/juas-adventure-fest-3.0
@@ -47,3 +56,9 @@ jobs:
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
             docker system prune -af --volumes
+
+      - name: Azure Secrets Notification
+        if: ${{ secrets.AZURE_VM_HOST == '' || secrets.AZURE_SSH_KEY == '' }}
+        run: |
+          echo "Notice: Azure VM secrets (AZURE_VM_HOST, AZURE_SSH_KEY) are not yet configured in GitHub Secrets."
+          echo "Docker images have been successfully built and pushed to GHCR (ghcr.io/${{ env.IMAGE_REPO }})."

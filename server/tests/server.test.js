@@ -1,4 +1,6 @@
 process.env.NODE_ENV = 'test';
+process.env.REDIS_ENABLED = 'false';
+
 const test = require('node:test');
 const assert = require('node:assert');
 const app = require('../src/server');
